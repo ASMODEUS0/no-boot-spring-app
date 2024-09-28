@@ -21,13 +21,11 @@ public class LandmarkCreateMapper implements Mapper<LandmarkCreateDto, Landmark>
                 .description(object.description())
                 .services(object.servicesId().stream()
                         .map(serviceRepository::findById)
-                        .map(mayBeService-> mayBeService.orElseThrow(()-> new EntityNotFoundException("An attempt to create a landmark with a " +
-                                                                                                      "non-existent entity of type Service")))
+                        .map(mayBeService-> mayBeService.orElseThrow(()->
+                                new EntityNotFoundException("An attempt to create a landmark with a " +
+                                                            "non-existent entity of type Service")))
                         .toList())
                 .build();
     }
 }
 
-//
-//             new IllegalArgumentException("An attempt to create a landmark with a " +
-//                     "non-existent entity of type Service")))

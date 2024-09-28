@@ -1,5 +1,6 @@
 package org.aston.configuration;
 
+import lombok.extern.slf4j.Slf4j;
 import org.postgresql.Driver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -12,7 +13,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 import java.util.Properties;
-
+@Slf4j
 @Configuration
 @EnableTransactionManagement
 @ComponentScan(basePackages = "org.aston")
@@ -24,6 +25,7 @@ public class ApplicationConfiguration {
         sessionFactory.setDataSource(dataSource());
         sessionFactory.setPackagesToScan("org.aston");
         sessionFactory.setHibernateProperties(hibernateProperties());
+        log.debug("Init "+ sessionFactory);
         return sessionFactory;
     }
 
@@ -34,6 +36,7 @@ public class ApplicationConfiguration {
         dataSource.setUrl("jdbc:postgresql://localhost:5432/postgres");
         dataSource.setUsername("postgres");
         dataSource.setPassword("postgres");
+        log.debug("Init "+ dataSource);
         return dataSource;
     }
 
@@ -42,6 +45,7 @@ public class ApplicationConfiguration {
         HibernateTransactionManager transactionManager
                 = new HibernateTransactionManager();
         transactionManager.setSessionFactory(sessionFactory().getObject());
+        log.debug("Init "+ transactionManager);
         return transactionManager;
     }
 
@@ -53,6 +57,7 @@ public class ApplicationConfiguration {
                 "hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
         hibernateProperties.setProperty("hibernate.show_sql","true");
         hibernateProperties.setProperty("hibernate.format_sql","true");
+        log.debug("Init "+ hibernateProperties);
 
         return hibernateProperties;
     }

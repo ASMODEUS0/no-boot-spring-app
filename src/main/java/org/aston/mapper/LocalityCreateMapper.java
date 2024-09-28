@@ -20,8 +20,9 @@ public class LocalityCreateMapper implements Mapper<LocalityCreateDto, Locality>
                 .population(object.population())
                 .landmarks(object.landmarksId().stream()
                         .map(landmarkRepository::findById)
-                        .map(mayBeLandmark-> mayBeLandmark.orElseThrow(()-> new EntityNotFoundException("An attempt to create a landmark with a " +
-                                                                                                    "non-existent entity of type Service")))
+                        .map(mayBeLandmark-> mayBeLandmark.orElseThrow(()->
+                                new EntityNotFoundException("An attempt to create a landmark with a " +
+                                                            "non-existent entity of type Service")))
                         .toList())
                 .build();
 
