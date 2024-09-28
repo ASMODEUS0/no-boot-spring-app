@@ -1,5 +1,6 @@
 package org.aston.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.aston.dto.create.LocalityCreateDto;
@@ -27,10 +28,10 @@ public class LocalityService {
     }
 
     @Transactional
-    public boolean update(LocalityUpdateDto updateDto){
+    public void update(LocalityUpdateDto updateDto){
         Optional<Locality> mayBeLocality = repository.findById(updateDto.id());
         mayBeLocality.ifPresent(locality -> localityUpdateMapper.mapFrom(updateDto, locality));
-        return mayBeLocality.isPresent();
+        mayBeLocality.orElseThrow(()->  new EntityNotFoundException("Entity of type: Locality with id: " + updateDto.id() + " don't present"));
     }
 
 }
