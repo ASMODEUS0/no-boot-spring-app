@@ -2,52 +2,53 @@ package org.aston.configuration;
 
 import lombok.extern.slf4j.Slf4j;
 import org.postgresql.Driver;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.sql.DataSource;
 import java.util.Properties;
+
 @Slf4j
-@Configuration
-@EnableWebMvc
 @EnableTransactionManagement
-@ComponentScan(basePackages = "org.aston")
-public class ApplicationConfiguration {
+@Configuration
+public class JpaConfig {
 
     @Bean
-    public LocalSessionFactoryBean sessionFactory() {
+    public LocalSessionFactoryBean sessionFactory(DataSource dataSource) {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
-        sessionFactory.setDataSource(dataSource());
+        sessionFactory.setDataSource(dataSource);
         sessionFactory.setPackagesToScan("org.aston");
         sessionFactory.setHibernateProperties(hibernateProperties());
-        log.debug("Init "+ sessionFactory);
+        log.info("Init " + sessionFactory);
         return sessionFactory;
     }
 
+
     @Bean
-    public DataSource dataSource() {
+    public DataSource dataSource(@Value("${app.datasource.url}") String url,
+                                 @Value("${app.datasource.username}") String username,
+                                 @Value("${app.datasource.password}") char[] password) {
         SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
         dataSource.setDriver(new Driver());
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/postgres");
-        dataSource.setUsername("postgres");
-        dataSource.setPassword("postgres");
-        log.debug("Init "+ dataSource);
+        dataSource.setUrl(url);
+        dataSource.setUsername(username);
+        dataSource.setPassword(String.valueOf(password));
+        log.info("Init " + dataSource);
         return dataSource;
     }
 
     @Bean
-    public PlatformTransactionManager hibernateTransactionManager() {
+    public PlatformTransactionManager hibernateTransactionManager(LocalSessionFactoryBean sessionFactory) {
         HibernateTransactionManager transactionManager
                 = new HibernateTransactionManager();
-        transactionManager.setSessionFactory(sessionFactory().getObject());
-        log.debug("Init "+ transactionManager);
+        transactionManager.setSessionFactory(sessionFactory.getObject());
+        log.info("Init " + transactionManager);
         return transactionManager;
     }
 
@@ -57,11 +58,10 @@ public class ApplicationConfiguration {
                 "hibernate.hbm2ddl.auto", "validate");
         hibernateProperties.setProperty(
                 "hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
-        hibernateProperties.setProperty("hibernate.show_sql","true");
-        hibernateProperties.setProperty("hibernate.format_sql","true");
-        log.debug("Init "+ hibernateProperties);
+        hibernateProperties.setProperty("hibernate.show_sql", "true");
+        hibernateProperties.setProperty("hibernate.format_sql", "true");
+        log.info("Init " + hibernateProperties);
 
         return hibernateProperties;
     }
-
 }

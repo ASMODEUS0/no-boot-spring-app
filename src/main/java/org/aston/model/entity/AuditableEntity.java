@@ -2,7 +2,6 @@ package org.aston.model.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
-import lombok.Builder;
 import lombok.Getter;
 import org.aston.model.entity.base.EntityBase;
 
