@@ -10,14 +10,13 @@ import java.io.Serializable;
 import java.time.Instant;
 @MappedSuperclass
 @Getter
-public abstract class AuditableEntity <T extends Serializable> extends EntityBase<T> {
+public abstract class AuditableEntity <T extends Serializable> implements EntityBase<T> {
 
     {
         createdAt = Instant.now();
     }
 
     @Column(name = "created_at")
-    @Builder.Default
     private Instant createdAt;
 
 }

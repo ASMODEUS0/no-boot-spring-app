@@ -12,7 +12,6 @@ import org.springframework.web.servlet.DispatcherServlet;
 @Slf4j
 public class MainWebAppInitializer implements WebApplicationInitializer {
 
-
     @Override
     public void onStartup(ServletContext servletContext) {
         log.info("Init web initializer");

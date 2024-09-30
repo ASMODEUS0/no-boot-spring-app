@@ -6,14 +6,17 @@ import org.aston.model.entity.base.EntityBase;
 
 import java.util.ArrayList;
 import java.util.List;
-@Builder
-@AllArgsConstructor
 @Data
-@EqualsAndHashCode(callSuper = true)
 @ToString(exclude = {"landmarks"})
+@AllArgsConstructor
+@Builder
 @NoArgsConstructor
 @Entity
-public class Locality extends EntityBase<Long> {
+public class Locality implements EntityBase<Long> {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String name;
     private Integer population;
     private Boolean metroAvailability;
@@ -21,5 +24,6 @@ public class Locality extends EntityBase<Long> {
     @Builder.Default
     @OneToMany(mappedBy = "locality")
     private List<Landmark> landmarks = new ArrayList<>();
+
 
 }

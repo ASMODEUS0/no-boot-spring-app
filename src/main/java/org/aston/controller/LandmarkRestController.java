@@ -1,5 +1,6 @@
 package org.aston.controller;
 
+
 import lombok.extern.slf4j.Slf4j;
 import org.aston.dto.create.LandmarkCreateDto;
 import org.aston.dto.read.LandmarkReadDto;
@@ -22,12 +23,14 @@ public class LandmarkRestController {
         this.landmarkService = landmarkService;
     }
 
+
     @PostMapping(path = "/add")
     public ResponseEntity<Object> addLandmark(@RequestBody LandmarkCreateDto landmarkCreateDto) {
         log.debug("Received /landmark/add request with body: " + landmarkCreateDto.toString());
         landmarkService.save(landmarkCreateDto);
         return ResponseEntity.ok().build();
     }
+
 
     @PostMapping(path = "/getAll")
     public List<LandmarkReadDto> getLandmarks(@RequestBody LandmarkGetRequest landmarkRequest) {

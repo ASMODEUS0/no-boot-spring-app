@@ -14,13 +14,17 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 public class Landmark extends AuditableEntity<Long> {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String name;
 
     private String description;
     private LandmarkType type;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "locality_id")
     private Locality locality;
 
     @Builder.Default
@@ -31,6 +35,9 @@ public class Landmark extends AuditableEntity<Long> {
             inverseJoinColumns = @JoinColumn(name = "service_id")
     )
     private List<Service> services = new ArrayList<>();
+
+
+
 
 
 }
