@@ -4,8 +4,8 @@ import jakarta.persistence.EntityNotFoundException;
 import org.aston.dto.create.LocalityCreateDto;
 import org.aston.dto.update.LocalityUpdateDto;
 import org.aston.mapper.LocalityMapper;
-import org.aston.repository.LandmarkRepository;
-import org.aston.repository.LocalityRepository;
+import org.aston.repository.LandmarkRepositoryJpa;
+import org.aston.repository.LocalityRepositoryJpa;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,9 +21,9 @@ import java.util.Optional;
 class LocalityServiceUnitTest {
 
     @Mock
-    private LocalityRepository localityRepository;
+    private LocalityRepositoryJpa localityRepository;
     @Mock
-    private LandmarkRepository landmarkRepository;
+    private LandmarkRepositoryJpa landmarkRepository;
     @Mock
     private LocalityMapper localityMapper;
 

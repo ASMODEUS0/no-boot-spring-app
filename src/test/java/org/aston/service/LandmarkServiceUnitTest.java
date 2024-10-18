@@ -6,10 +6,9 @@ import org.aston.dto.read.LandmarkReadDto;
 import org.aston.dto.update.LandmarkUpdateDto;
 import org.aston.mapper.LandmarkMapper;
 import org.aston.model.entity.LandmarkType;
-import org.aston.repository.LandmarkRepository;
-import org.aston.repository.ServiceRepository;
+import org.aston.repository.LandmarkRepositoryJpa;
+import org.aston.repository.ServiceRepositoryJpa;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,9 +26,9 @@ class LandmarkServiceUnitTest {
     @Mock
     private LandmarkMapper landmarkMapper;
     @Mock
-    private ServiceRepository serviceRepository;
+    private ServiceRepositoryJpa serviceRepository;
     @Mock
-    private LandmarkRepository landmarkRepository;
+    private LandmarkRepositoryJpa landmarkRepository;
 
     @InjectMocks
     private LandmarkService landmarkService;

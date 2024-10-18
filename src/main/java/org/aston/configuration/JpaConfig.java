@@ -1,10 +1,14 @@
 package org.aston.configuration;
 
+import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
+import org.aston.repository.LandmarkRepositoryJpa;
+import org.hibernate.SessionFactory;
 import org.postgresql.Driver;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
@@ -16,8 +20,15 @@ import java.util.Properties;
 
 @Slf4j
 @EnableTransactionManagement
+@EnableJpaRepositories(basePackageClasses = LandmarkRepositoryJpa.class,
+        entityManagerFactoryRef = "sessionFactory")
 @Configuration
 public class JpaConfig {
+
+    @Bean
+    public EntityManager entityManager(SessionFactory entityManagerFactory) {
+        return entityManagerFactory.createEntityManager();
+    }
 
 
     @Bean
@@ -45,7 +56,7 @@ public class JpaConfig {
     }
 
     @Bean
-    public PlatformTransactionManager hibernateTransactionManager(LocalSessionFactoryBean sessionFactory) {
+    public PlatformTransactionManager transactionManager(LocalSessionFactoryBean sessionFactory) {
         HibernateTransactionManager transactionManager
                 = new HibernateTransactionManager();
         transactionManager.setSessionFactory(sessionFactory.getObject());

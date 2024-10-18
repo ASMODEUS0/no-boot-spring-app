@@ -8,8 +8,8 @@ import org.aston.dto.update.LocalityUpdateDto;
 import org.aston.mapper.LocalityMapper;
 import org.aston.model.entity.Landmark;
 import org.aston.model.entity.Locality;
-import org.aston.repository.LandmarkRepository;
-import org.aston.repository.LocalityRepository;
+import org.aston.repository.LandmarkRepositoryJpa;
+import org.aston.repository.LocalityRepositoryJpa;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -19,8 +19,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class LocalityService {
 
-    private final LocalityRepository localityRepository;
-    private final LandmarkRepository landmarkRepository;
+    private final LocalityRepositoryJpa localityRepository;
+    private final LandmarkRepositoryJpa landmarkRepository;
     private final LocalityMapper localityMapper;
 
     @Transactional
@@ -42,7 +42,7 @@ public class LocalityService {
         Optional<Locality> mayBeLocality = localityRepository.findById(localityUpdateDto.id());
         Locality locality = mayBeLocality.map(l -> localityMapper.mapToEntity(localityUpdateDto))
                 .orElseThrow(() -> new EntityNotFoundException("Entity of type: Locality with id: " + localityUpdateDto.id() + " don't present"));
-        localityRepository.update(locality);
+        localityRepository.save(locality);
     }
 
 }

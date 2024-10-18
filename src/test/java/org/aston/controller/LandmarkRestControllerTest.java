@@ -61,6 +61,7 @@ class LandmarkRestControllerTest extends WebIntegrationTest {
 
 
     @Test
+    @Transactional
     void addLandmark() throws Exception {
         LandmarkCreateDto landmark = new LandmarkCreateDto(NAME, DESCRIPTION, LANDMARK_TYPE, List.of());
 

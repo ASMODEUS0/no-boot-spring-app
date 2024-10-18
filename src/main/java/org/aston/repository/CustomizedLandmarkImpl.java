@@ -1,6 +1,7 @@
 package org.aston.repository;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
@@ -10,34 +11,37 @@ import org.aston.model.entity.Landmark_;
 import org.aston.model.entity.Locality_;
 import org.aston.request.LandmarkGetRequest;
 import org.aston.request.Order;
-import org.hibernate.SessionFactory;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-@Component
-public class LandmarkRepository extends RepositoryBase<Long, Landmark> {
-    public LandmarkRepository(SessionFactory sessionFactory) {
-        super(Landmark.class, sessionFactory);
-    }
+@Repository
+public class CustomizedLandmarkImpl implements CustomizedLandmark {
 
+    private final Class<Landmark> clazz = Landmark.class;
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Override
+    @Transactional
     public List<Landmark> findBy(LandmarkGetRequest request) {
 
-        if(request == null){
+        if (request == null) {
             return new ArrayList<>();
         }
 
         List<Predicate> predicates = new ArrayList<>();
 
-        EntityManager entityManager = sessionFactory.getCurrentSession();
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 
         CriteriaQuery<Landmark> criteria = cb.createQuery(clazz);
 
         Root<Landmark> root = criteria.from(clazz);
 
-        if (request.locality != null && !request.locality.isEmpty()) {
+
+        if (!CollectionUtils.isEmpty(request.locality)) {
             request.locality.forEach(localityId -> predicates.add(
                     cb.equal(root
                             .get(Landmark_.LOCALITY)
@@ -45,7 +49,7 @@ public class LandmarkRepository extends RepositoryBase<Long, Landmark> {
             ));
         }
 
-        if (request.type != null &&!request.type.isEmpty()) {
+        if (!CollectionUtils.isEmpty(request.type)) {
             request.type.forEach(typeInt -> predicates.add(
                     cb.equal(root.get(Landmark_.TYPE), typeInt)
             ));
@@ -63,4 +67,6 @@ public class LandmarkRepository extends RepositoryBase<Long, Landmark> {
         }
         return entityManager.createQuery(criteria).getResultList();
     }
+
+
 }

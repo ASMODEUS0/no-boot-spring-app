@@ -12,7 +12,6 @@ import org.aston.request.Order;
 import org.aston.request.Sort;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -25,10 +24,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class LandmarkRepositoryTest extends IntegrationTest {
 
     @Autowired
-    private LandmarkRepository landmarkRepository;
-    //
-    @Autowired
-    private TransactionTemplate transactionTemplate;
+    private LandmarkRepositoryJpa landmarkRepository;
+
 
     private Landmark landmark;
 
@@ -63,7 +60,7 @@ class LandmarkRepositoryTest extends IntegrationTest {
 
         entityManager.persist(landmark);
 
-        landmarkRepository.delete(landmark.getId());
+        landmarkRepository.delete(landmark);
 
         Landmark mayBeLandmark = entityManager.find(Landmark.class, landmark.getId());
 
@@ -78,7 +75,7 @@ class LandmarkRepositoryTest extends IntegrationTest {
 
         landmark.setName(UPDATED_NAME);
 
-        landmarkRepository.update(landmark);
+        landmarkRepository.save(landmark);
 
         Landmark mayBeLandmark = entityManager.find(Landmark.class, landmark.getId());
 
@@ -108,6 +105,7 @@ class LandmarkRepositoryTest extends IntegrationTest {
 
 
         @BeforeEach
+        @Transactional
         void setUp() {
             landmarks = new ArrayList<>();
 
@@ -120,7 +118,7 @@ class LandmarkRepositoryTest extends IntegrationTest {
             landmarks.add(Landmark.builder().name("4").type(LandmarkType.MUSEUM).locality(locality2).build());
             landmarks.add(Landmark.builder().name("5").type(LandmarkType.MUSEUM).locality(locality).build());
 
-            transactionTemplate.executeWithoutResult(status -> landmarks.forEach(entityManager::persist));
+             landmarks.forEach(entityManager::persist);
         }
 
 
