@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+
 @Slf4j
 @RestController
 @RequestMapping("locality")
@@ -18,10 +20,11 @@ public class LocalityController {
 
     private final LocalityService localityService;
 
+
     @PostMapping(path = "add")
     public ResponseEntity<Object> addLocality(@RequestBody LocalityCreateDto localityCreateDto){
         log.debug("Received /locality/add request with body: " + localityCreateDto.toString());
-        localityService.add(localityCreateDto);
+        localityService.save(localityCreateDto);
         return ResponseEntity.ok().build();
     }
 
@@ -31,5 +34,4 @@ public class LocalityController {
         localityService.update(localityUpdateDto);
         return ResponseEntity.ok().build();
     }
-
 }

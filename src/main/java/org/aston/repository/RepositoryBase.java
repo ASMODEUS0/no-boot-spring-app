@@ -17,6 +17,7 @@ public abstract class RepositoryBase<K extends Serializable, E extends EntityBas
     @Getter
     protected final SessionFactory sessionFactory;
 
+
     @Override
     public void save(E entity) {
         sessionFactory.getCurrentSession().persist(entity);

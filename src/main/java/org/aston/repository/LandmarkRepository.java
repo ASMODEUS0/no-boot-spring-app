@@ -23,6 +23,11 @@ public class LandmarkRepository extends RepositoryBase<Long, Landmark> {
     }
 
     public List<Landmark> findBy(LandmarkGetRequest request) {
+
+        if(request == null){
+            return new ArrayList<>();
+        }
+
         List<Predicate> predicates = new ArrayList<>();
 
         EntityManager entityManager = sessionFactory.getCurrentSession();
@@ -32,7 +37,7 @@ public class LandmarkRepository extends RepositoryBase<Long, Landmark> {
 
         Root<Landmark> root = criteria.from(clazz);
 
-        if (!request.locality.isEmpty()) {
+        if (request.locality != null && !request.locality.isEmpty()) {
             request.locality.forEach(localityId -> predicates.add(
                     cb.equal(root
                             .get(Landmark_.LOCALITY)
@@ -40,8 +45,8 @@ public class LandmarkRepository extends RepositoryBase<Long, Landmark> {
             ));
         }
 
-        if(!request.type.isEmpty()){
-            request.type.forEach(typeInt-> predicates.add(
+        if (request.type != null &&!request.type.isEmpty()) {
+            request.type.forEach(typeInt -> predicates.add(
                     cb.equal(root.get(Landmark_.TYPE), typeInt)
             ));
         }
@@ -49,10 +54,10 @@ public class LandmarkRepository extends RepositoryBase<Long, Landmark> {
         criteria.select(root).where(predicates.toArray(new Predicate[0]));
 
 
-        if(request.sort != null && request.sort.type != null){
-            if(request.sort.order == Order.ASC){
+        if (request.sort != null && request.sort.type != null) {
+            if (request.sort.order == Order.ASC) {
                 criteria.orderBy(cb.asc(root.get(request.sort.type)));
-            }else{
+            } else {
                 criteria.orderBy(cb.desc(root.get(request.sort.type)));
             }
         }

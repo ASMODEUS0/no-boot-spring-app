@@ -1,6 +1,7 @@
 package org.aston.controller;
 
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aston.dto.create.LandmarkCreateDto;
 import org.aston.dto.read.LandmarkReadDto;
@@ -13,15 +14,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 @Slf4j
 @RestController
-@RequestMapping("/landmark")
+@RequestMapping("/landmarks")
+@RequiredArgsConstructor
 public class LandmarkRestController {
 
     private final LandmarkService landmarkService;
 
-
-    public LandmarkRestController(LandmarkService landmarkService) {
-        this.landmarkService = landmarkService;
-    }
 
 
     @PostMapping(path = "/add")
@@ -32,25 +30,25 @@ public class LandmarkRestController {
     }
 
 
+
     @PostMapping(path = "/getAll")
-    public List<LandmarkReadDto> getLandmarks(@RequestBody LandmarkGetRequest landmarkRequest) {
+    public ResponseEntity<List<LandmarkReadDto>> getLandmarks(@RequestBody LandmarkGetRequest landmarkRequest) {
         log.debug("Received /landmark/getAll request with body: " + landmarkRequest.toString());
-        return landmarkService.getAll(landmarkRequest);
+       return  ResponseEntity.ok(landmarkService.getAll(landmarkRequest));
     }
 
-    @PostMapping(path = "/update")
+    @PutMapping(path = "/update")
     public ResponseEntity<Object> updateLandmark(@RequestBody LandmarkUpdateDto landmarkUpdateDto) {
         log.debug("Received /landmark/update request with body: " + landmarkUpdateDto.toString());
         landmarkService.update(landmarkUpdateDto);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping(path = "/delete")
+    @DeleteMapping(path = "/delete")
     public ResponseEntity<Object> deleteLandmark(@RequestParam(name = "id") Long id) {
         log.debug("Received /landmark/delete request with body: " + id.toString());
         landmarkService.delete(id);
         return ResponseEntity.ok().build();
     }
-
 
 }

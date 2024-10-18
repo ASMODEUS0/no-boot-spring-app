@@ -12,6 +12,7 @@ import org.aston.model.entity.Service;
 import org.aston.repository.LandmarkRepository;
 import org.aston.repository.ServiceRepository;
 import org.aston.request.LandmarkGetRequest;
+
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.Optional;
 @Component
 @AllArgsConstructor
 public class LandmarkService {
+
 
     private final ServiceRepository serviceRepository;
     private final LandmarkRepository repository;

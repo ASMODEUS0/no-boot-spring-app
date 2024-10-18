@@ -19,6 +19,7 @@ import java.util.Properties;
 @Configuration
 public class JpaConfig {
 
+
     @Bean
     public LocalSessionFactoryBean sessionFactory(DataSource dataSource) {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
@@ -29,17 +30,17 @@ public class JpaConfig {
         return sessionFactory;
     }
 
-
     @Bean
-    public DataSource dataSource(@Value("${app.datasource.url}") String url,
+    public DataSource dataSource(@Value("${app.datasource.url}") String jdbcUrl,
                                  @Value("${app.datasource.username}") String username,
                                  @Value("${app.datasource.password}") char[] password) {
         SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
         dataSource.setDriver(new Driver());
-        dataSource.setUrl(url);
+        dataSource.setUrl(jdbcUrl);
         dataSource.setUsername(username);
         dataSource.setPassword(String.valueOf(password));
         log.info("Init " + dataSource);
+        log.error("us: " + username + " pass: " +String.valueOf(password) + " jdbcUlr: " + jdbcUrl);
         return dataSource;
     }
 
@@ -55,7 +56,7 @@ public class JpaConfig {
     private Properties hibernateProperties() {
         Properties hibernateProperties = new Properties();
         hibernateProperties.setProperty(
-                "hibernate.hbm2ddl.auto", "validate");
+                "hibernate.hbm2ddl.auto", "create");
         hibernateProperties.setProperty(
                 "hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
         hibernateProperties.setProperty("hibernate.show_sql", "true");

@@ -24,7 +24,7 @@ public class LocalityService {
     private final LocalityMapper localityMapper;
 
     @Transactional
-    public void add(LocalityCreateDto localityCreateDto) {
+    public void save(LocalityCreateDto localityCreateDto) {
         List<Landmark> landmarks = localityCreateDto.landmarksId().stream()
                 .map(landmarkRepository::findById)
                 .map(mayBeService -> mayBeService.orElseThrow(() ->
