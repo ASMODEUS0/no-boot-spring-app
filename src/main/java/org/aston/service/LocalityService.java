@@ -33,7 +33,7 @@ public class LocalityService {
                 .toList();
 
         Locality locality = localityMapper.mapToEntity(localityCreateDto);
-        locality.setLandmarks(landmarks);
+        landmarks.forEach(locality::setLandmark);
         localityRepository.save(locality);
         return localityMapper.mapToReadDto(locality);
     }

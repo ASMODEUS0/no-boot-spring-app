@@ -25,5 +25,9 @@ public class Locality implements EntityBase<Long> {
     @OneToMany(mappedBy = "locality")
     private List<Landmark> landmarks = new ArrayList<>();
 
+    public void setLandmark(Landmark landmark){
+        landmarks.add(landmark);
+        landmark.setLocality(this);
+    }
 
 }
