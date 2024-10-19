@@ -6,6 +6,7 @@ import org.aston.dto.update.LocalityUpdateDto;
 import org.aston.model.entity.Locality;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
@@ -15,6 +16,6 @@ public interface LocalityMapper {
 
     Locality mapToEntity(LocalityCreateDto localityCreateDto);
 
-    Locality mapToEntity(LocalityUpdateDto localityUpdateDto);
+    void updateMap(@MappingTarget Locality locality, LocalityUpdateDto localityUpdateDto);
 
 }

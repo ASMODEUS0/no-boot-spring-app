@@ -14,7 +14,6 @@ import org.aston.repository.LocalityRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -41,11 +40,14 @@ public class LocalityService {
 
     @Transactional
     public LocalityReadDto update(LocalityUpdateDto localityUpdateDto) {
-        Optional<Locality> mayBeLocality = localityRepository.findById(localityUpdateDto.id());
-        Locality locality = mayBeLocality.map(l -> localityMapper.mapToEntity(localityUpdateDto))
+       return  localityRepository.findById(localityUpdateDto.id())
+                .map(locality -> {
+                    localityMapper.updateMap(locality, localityUpdateDto);
+                    return locality;
+                })
+                .map(localityRepository::save)
+                .map(localityMapper::mapToReadDto)
                 .orElseThrow(() -> new EntityNotFoundException("Entity of type: Locality with id: " + localityUpdateDto.id() + " don't present"));
-        localityRepository.save(locality);
-        return localityMapper.mapToReadDto(locality);
     }
 
 }

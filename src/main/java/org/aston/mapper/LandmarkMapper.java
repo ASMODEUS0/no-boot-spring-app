@@ -6,6 +6,7 @@ import org.aston.dto.update.LandmarkUpdateDto;
 import org.aston.model.entity.Landmark;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = LocalityMapper.class,
@@ -15,7 +16,7 @@ public interface LandmarkMapper {
 
     Landmark mapToEntity(LandmarkCreateDto landmarkCreateDto);
 
-    Landmark mapToEntity(LandmarkUpdateDto landmarkUpdateDto);
+    void updateMap(@MappingTarget Landmark landmark, LandmarkUpdateDto landmarkUpdateDto);
 
     LandmarkReadDto mapToReadDto(Landmark landmark);
 

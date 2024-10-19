@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Component
 @AllArgsConstructor
@@ -39,12 +38,15 @@ public class LandmarkService {
 
     @Transactional
     public LandmarkReadDto update(LandmarkUpdateDto landmarkUpdateDto) {
-        Objects.requireNonNull(landmarkUpdateDto);
-        Optional<Landmark> mayBeLandmark = landmarkRepository.findById(landmarkUpdateDto.getId());
-        Landmark landmark = mayBeLandmark.map(l -> landmarkMapper.mapToEntity(landmarkUpdateDto))
+        return landmarkRepository.findById(landmarkUpdateDto.getId())
+                .map(landmark -> {
+                    landmarkMapper.updateMap(landmark, landmarkUpdateDto);
+                    return landmark;
+                })
+                .map(landmarkRepository::save)
+                .map(landmarkMapper::mapToReadDto)
                 .orElseThrow(() -> new EntityNotFoundException("Entity of type: Locality with id: " + landmarkUpdateDto.getId() + " don't present"));
-        landmarkRepository.save(landmark);
-        return landmarkMapper.mapToReadDto(landmark);
+
     }
 
     @Transactional
