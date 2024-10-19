@@ -6,8 +6,8 @@ import org.aston.dto.read.LandmarkReadDto;
 import org.aston.dto.update.LandmarkUpdateDto;
 import org.aston.mapper.LandmarkMapper;
 import org.aston.model.entity.LandmarkType;
-import org.aston.repository.LandmarkRepositoryJpa;
-import org.aston.repository.ServiceRepositoryJpa;
+import org.aston.repository.LandmarkRepository;
+import org.aston.repository.ServiceRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,9 +26,9 @@ class LandmarkServiceUnitTest {
     @Mock
     private LandmarkMapper landmarkMapper;
     @Mock
-    private ServiceRepositoryJpa serviceRepository;
+    private ServiceRepository serviceRepository;
     @Mock
-    private LandmarkRepositoryJpa landmarkRepository;
+    private LandmarkRepository landmarkRepository;
 
     @InjectMocks
     private LandmarkService landmarkService;
@@ -53,10 +53,9 @@ class LandmarkServiceUnitTest {
     }
 
     @Test
-    void deleteThrownExceptionWhenRepositoryDoNotContainData() {
+    void deleteReturnFalseWhenRepositoryDoNotContainData() {
         Mockito.when(landmarkRepository.findById(1L)).thenReturn(Optional.empty());
-
-        Assertions.assertThrows(EntityNotFoundException.class, () -> landmarkService.delete(1L));
+        Assertions.assertFalse(landmarkService.delete(1L));
     }
 
     @Test

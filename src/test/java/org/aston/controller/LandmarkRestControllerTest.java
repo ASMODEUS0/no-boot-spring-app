@@ -65,10 +65,11 @@ class LandmarkRestControllerTest extends WebIntegrationTest {
     void addLandmark() throws Exception {
         LandmarkCreateDto landmark = new LandmarkCreateDto(NAME, DESCRIPTION, LANDMARK_TYPE, List.of());
 
-        mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH + "/add")
+        mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectToJson(landmark)))
-                .andExpect(status().isOk());
+
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -98,7 +99,7 @@ class LandmarkRestControllerTest extends WebIntegrationTest {
         String UPDATED_DESCRIPTION = DESCRIPTION + "*_*";
         LandmarkUpdateDto landmarkUpdate = new LandmarkUpdateDto(landmark.getId(), UPDATED_DESCRIPTION);
 
-        mockMvc.perform(MockMvcRequestBuilders.put(BASE_PATH + "/update")
+        mockMvc.perform(MockMvcRequestBuilders.put(BASE_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectToJson(landmarkUpdate)))
 
@@ -112,7 +113,7 @@ class LandmarkRestControllerTest extends WebIntegrationTest {
 
         entityManager.persist(landmark);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete(BASE_PATH + "/delete")
+        mockMvc.perform(MockMvcRequestBuilders.delete(BASE_PATH)
                         .param("id", String.valueOf(landmark.getId())))
                 .andExpect(status().isOk());
 

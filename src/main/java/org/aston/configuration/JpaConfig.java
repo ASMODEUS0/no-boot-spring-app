@@ -2,7 +2,7 @@ package org.aston.configuration;
 
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
-import org.aston.repository.LandmarkRepositoryJpa;
+import org.aston.repository.LandmarkRepository;
 import org.hibernate.SessionFactory;
 import org.postgresql.Driver;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +20,7 @@ import java.util.Properties;
 
 @Slf4j
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackageClasses = LandmarkRepositoryJpa.class,
+@EnableJpaRepositories(basePackageClasses = LandmarkRepository.class,
         entityManagerFactoryRef = "sessionFactory")
 @Configuration
 public class JpaConfig {

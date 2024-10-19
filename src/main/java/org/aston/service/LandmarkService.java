@@ -9,8 +9,8 @@ import org.aston.dto.update.LandmarkUpdateDto;
 import org.aston.mapper.LandmarkMapper;
 import org.aston.model.entity.Landmark;
 import org.aston.model.entity.Service;
-import org.aston.repository.LandmarkRepositoryJpa;
-import org.aston.repository.ServiceRepositoryJpa;
+import org.aston.repository.LandmarkRepository;
+import org.aston.repository.ServiceRepository;
 import org.aston.request.LandmarkGetRequest;
 
 import org.springframework.stereotype.Component;
@@ -24,37 +24,39 @@ import java.util.Optional;
 public class LandmarkService {
 
 
-    private final ServiceRepositoryJpa serviceRepository;
+    private final ServiceRepository serviceRepository;
     private final LandmarkMapper landmarkMapper;
-    private final LandmarkRepositoryJpa landmarkRepositoryJpa;
+    private final LandmarkRepository landmarkRepository;
 
 
     @Transactional
     public List<LandmarkReadDto> getAll(LandmarkGetRequest request) {
-        return landmarkRepositoryJpa.findBy(request)
+        return landmarkRepository.findBy(request)
                 .stream()
                 .map(landmarkMapper::mapToReadDto)
                 .toList();
     }
 
     @Transactional
-    public void update(LandmarkUpdateDto landmarkUpdateDto) {
+    public LandmarkReadDto update(LandmarkUpdateDto landmarkUpdateDto) {
         Objects.requireNonNull(landmarkUpdateDto);
-        Optional<Landmark> mayBeLandmark = landmarkRepositoryJpa.findById(landmarkUpdateDto.getId());
+        Optional<Landmark> mayBeLandmark = landmarkRepository.findById(landmarkUpdateDto.getId());
         Landmark landmark = mayBeLandmark.map(l -> landmarkMapper.mapToEntity(landmarkUpdateDto))
                 .orElseThrow(() -> new EntityNotFoundException("Entity of type: Locality with id: " + landmarkUpdateDto.getId() + " don't present"));
-        landmarkRepositoryJpa.save(landmark);
+        landmarkRepository.save(landmark);
+        return landmarkMapper.mapToReadDto(landmark);
     }
 
     @Transactional
-    public void delete(Long id) {
-        Optional<Landmark> mayBeLandmark = landmarkRepositoryJpa.findById(id);
-        Landmark landmark = mayBeLandmark.orElseThrow(() -> new EntityNotFoundException("Entity of type: Landmark with id: " + id + " don't present"));
-        landmarkRepositoryJpa.delete(landmark);
+    public boolean delete(Long id) {
+        return landmarkRepository.findById(id).map(landmark -> {
+            landmarkRepository.delete(landmark);
+            return true;
+        }).orElse(false);
     }
 
     @Transactional
-    public void save(LandmarkCreateDto landmarkCreateDto) {
+    public LandmarkReadDto save(LandmarkCreateDto landmarkCreateDto) {
         Objects.requireNonNull(landmarkCreateDto);
 
         List<Service> services = landmarkCreateDto.servicesId().stream()
@@ -66,7 +68,8 @@ public class LandmarkService {
 
         Landmark landmark = landmarkMapper.mapToEntity(landmarkCreateDto);
         landmark.setServices(services);
-        landmarkRepositoryJpa.save(landmark);
+        Landmark savedLandmark = landmarkRepository.save(landmark);
+        return landmarkMapper.mapToReadDto(savedLandmark);
     }
 
 

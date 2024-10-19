@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class LandmarkRepositoryTest extends IntegrationTest {
 
     @Autowired
-    private LandmarkRepositoryJpa landmarkRepository;
+    private LandmarkRepository landmarkRepository;
 
 
     private Landmark landmark;
