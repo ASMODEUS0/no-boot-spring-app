@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("locality")
 @RequiredArgsConstructor
-public class LocalityController {
+public class LocalityRestController {
 
     private final LocalityService localityService;
 

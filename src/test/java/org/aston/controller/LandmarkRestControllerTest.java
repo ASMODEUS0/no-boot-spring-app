@@ -11,7 +11,6 @@ import org.aston.model.entity.LandmarkType;
 import org.aston.request.LandmarkGetRequest;
 import org.aston.request.Order;
 import org.aston.request.Sort;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +18,14 @@ import org.springframework.http.MediaType;
 
 import org.springframework.test.web.servlet.MockMvc;
 
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static util.TestUtil.objectToJson;
@@ -63,24 +63,25 @@ class LandmarkRestControllerTest extends WebIntegrationTest {
     @Test
     @Transactional
     void addLandmark() throws Exception {
-        LandmarkCreateDto landmark = new LandmarkCreateDto(NAME, DESCRIPTION, LANDMARK_TYPE, List.of());
+        LandmarkCreateDto landmarkDto = new LandmarkCreateDto(NAME, DESCRIPTION, LANDMARK_TYPE, List.of());
 
-        mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
+        mockMvc.perform(post(BASE_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectToJson(landmark)))
+                        .content(objectToJson(landmarkDto)))
 
+                .andExpect(jsonPath("$.name").value(NAME))
+                .andExpect(jsonPath("$.type").value(LANDMARK_TYPE.toString()))
+                .andExpect(jsonPath("$.description").value(DESCRIPTION))
                 .andExpect(status().isCreated());
     }
 
     @Test
     @Transactional
     void getLandmarks() throws Exception {
-
         entityManager.persist(landmark);
-
         LandmarkGetRequest landmarkRequest = new LandmarkGetRequest(new Sort(Order.ASC, "name"), List.of(), List.of());
 
-        mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH + "/getAll")
+        mockMvc.perform(post(BASE_PATH + "/getAll")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectToJson(landmarkRequest)))
 
@@ -99,12 +100,15 @@ class LandmarkRestControllerTest extends WebIntegrationTest {
         String UPDATED_DESCRIPTION = DESCRIPTION + "*_*";
         LandmarkUpdateDto landmarkUpdate = new LandmarkUpdateDto(landmark.getId(), UPDATED_DESCRIPTION);
 
-        mockMvc.perform(MockMvcRequestBuilders.put(BASE_PATH)
+        mockMvc.perform(put(BASE_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectToJson(landmarkUpdate)))
 
 
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(landmark.getId()))
+                .andExpect(jsonPath("$.description").value(UPDATED_DESCRIPTION))
+        ;
     }
 
     @Test
@@ -113,13 +117,13 @@ class LandmarkRestControllerTest extends WebIntegrationTest {
 
         entityManager.persist(landmark);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete(BASE_PATH)
+        mockMvc.perform(delete(BASE_PATH)
                         .param("id", String.valueOf(landmark.getId())))
                 .andExpect(status().isOk());
 
         Landmark mayBeLandmark =  entityManager.find(Landmark.class, landmark.getId());
 
-        Assertions.assertNull(mayBeLandmark);
+        assertNull(mayBeLandmark);
     }
 
 
