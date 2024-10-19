@@ -21,14 +21,14 @@ public class LocalityController {
 
     @PostMapping
     public ResponseEntity<LocalityReadDto> addLocality(@RequestBody LocalityCreateDto localityCreateDto){
-        log.debug("Received /locality/add request with body: " + localityCreateDto.toString());
+        log.debug("Received Post /locality request with body: " + localityCreateDto.toString());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(localityService.save(localityCreateDto));
     }
 
     @PutMapping
     public ResponseEntity<LocalityReadDto> updateLocality(@RequestBody LocalityUpdateDto localityUpdateDto){
-        log.debug("Received /locality/update request with body: " + localityUpdateDto.toString());
+        log.debug("Received Put /locality request with body: " + localityUpdateDto.toString());
         return ResponseEntity.ok(localityService.update(localityUpdateDto));
     }
 }

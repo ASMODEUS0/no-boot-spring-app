@@ -23,26 +23,26 @@ public class LandmarkRestController {
 
     @PostMapping
     public ResponseEntity<LandmarkReadDto> addLandmark(@RequestBody LandmarkCreateDto landmarkCreateDto) {
-        log.debug("Received /landmark/add request with body: " + landmarkCreateDto.toString());
+        log.debug("Received Post /landmark  request with body: " + landmarkCreateDto.toString());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(landmarkService.save(landmarkCreateDto));
     }
 
     @PostMapping(path = "/getAll")
     public ResponseEntity<List<LandmarkReadDto>> getLandmarks(@RequestBody LandmarkGetRequest landmarkRequest) {
-        log.debug("Received /landmark/getAll request with body: " + landmarkRequest.toString());
+        log.debug("Received Post /landmark/getAll request with body: " + landmarkRequest.toString());
        return  ResponseEntity.ok(landmarkService.getAll(landmarkRequest));
     }
 
     @PutMapping
     public ResponseEntity<LandmarkReadDto> updateLandmark(@RequestBody LandmarkUpdateDto landmarkUpdateDto) {
-        log.debug("Received /landmark/update request with body: " + landmarkUpdateDto.toString());
+        log.debug("Received Put /landmark request with body: " + landmarkUpdateDto.toString());
         return ResponseEntity.ok(landmarkService.update(landmarkUpdateDto));
     }
 
     @DeleteMapping
     public ResponseEntity<Void> deleteLandmark(@RequestParam(name = "id") Long id) {
-        log.debug("Received /landmark/delete request with body: " + id.toString());
+        log.debug("Received Delete /landmark request with body: " + id.toString());
        return  landmarkService.delete(id) ?
                ResponseEntity.ok().build() :
                ResponseEntity.notFound().build();
