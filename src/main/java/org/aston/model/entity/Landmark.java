@@ -23,12 +23,12 @@ public class Landmark extends AuditableEntity<Long> {
     private String description;
     private LandmarkType type;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "locality_id")
     private Locality locality;
 
     @Builder.Default
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "landmark_service",
             joinColumns = @JoinColumn(name = "landmark_id"),
