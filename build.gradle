@@ -48,7 +48,7 @@ dependencies {
 
 
 war{
-    archiveBaseName = "my-app"
+    archiveBaseName = "application"
 }
 test {
     useJUnitPlatform()
